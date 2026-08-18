@@ -9,7 +9,7 @@ add_library(arena_memtable STATIC
         src/node_internal.h
         src/node.c
         src/slice.c
-        src/list.c)
+        src/sorted_list.c)
 
 target_include_directories(arena_memtable PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 

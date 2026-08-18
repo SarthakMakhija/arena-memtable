@@ -1,23 +1,23 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "arena_memtable/list.h"
+#include "arena_memtable/sorted_list.h"
 #include "node_internal.h"
 #include "arena_memtable/node.h"
 
-struct list {
+struct sorted_list {
     struct arena *arena;
     struct node head;
 };
 
 static int compare_keys(const char *key, uint16_t first_length, const char *other_key, uint16_t other_length);
 
-struct list *new_list(int32_t const capacity) {
+struct sorted_list *new_list(int32_t const capacity) {
     struct arena *const arena = new_arena(capacity);
     if (arena == nullptr) {
         return nullptr;
     }
-    struct list *list = malloc(sizeof(struct list));
+    struct sorted_list *list = malloc(sizeof(struct sorted_list));
     if (list == nullptr) {
         destroy_arena(arena);
         return nullptr;
@@ -27,7 +27,7 @@ struct list *new_list(int32_t const capacity) {
     return list;
 }
 
-bool put(struct list *list, const char *key, uint16_t const key_length, const char *value,
+bool put(struct sorted_list *list, const char *key, uint16_t const key_length, const char *value,
          uint32_t const value_length) {
     const struct node node = new_node(list->arena, key, key_length, value, value_length);
     if (!is_valid_node(node)) {
@@ -71,7 +71,7 @@ bool put(struct list *list, const char *key, uint16_t const key_length, const ch
     return true;
 }
 
-struct slice get_value(struct list const *list, char const *key, uint16_t const key_length) {
+struct slice get_value(struct sorted_list const *list, char const *key, uint16_t const key_length) {
     struct node current = list->head;
     while (!is_null_node(current)) {
         struct slice const node_key = key_of(current);
@@ -88,7 +88,7 @@ struct slice get_value(struct list const *list, char const *key, uint16_t const 
     return new_invalid_slice();
 }
 
-void destroy_list(struct list *list) {
+void destroy_list(struct sorted_list *list) {
     if (list == nullptr) {
         return;
     }

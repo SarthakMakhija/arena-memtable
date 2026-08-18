@@ -1,6 +1,6 @@
 #include "unity.h"
 
-#include "arena_memtable/list.h"
+#include "arena_memtable/sorted_list.h"
 
 #include <string.h>
 
@@ -11,7 +11,7 @@ void tearDown() {
 }
 
 static void puts_a_single_key_value_pair() {
-    struct list *list = new_list(2 << 10);
+    struct sorted_list *list = new_list(2 << 10);
     const char *const key = "Storage";
     const char *const value = "LSM";
 
@@ -21,7 +21,7 @@ static void puts_a_single_key_value_pair() {
 }
 
 static void puts_a_single_key_value_pair_and_gets_the_value() {
-    struct list *list = new_list(2 << 10);
+    struct sorted_list *list = new_list(2 << 10);
     const char *const key = "Storage";
     const char *const value = "LSM";
 
@@ -39,7 +39,7 @@ static void puts_a_single_key_value_pair_and_gets_the_value() {
 }
 
 static void puts_a_couple_of_key_value_pairs() {
-    struct list *list = new_list(2 << 10);
+    struct sorted_list *list = new_list(2 << 10);
 
     TEST_ASSERT_TRUE(put(list, "Storage", strlen("Storage"), "LSM", strlen("LSM")));
     TEST_ASSERT_TRUE(put(list, "Consensus", strlen("Consensus"), "Raft", strlen("Raft")));
@@ -57,7 +57,7 @@ static void puts_a_couple_of_key_value_pairs() {
 }
 
 static void puts_a_few_key_value_pairs_with_overlapping_keys() {
-    struct list *list = new_list(2 << 10);
+    struct sorted_list *list = new_list(2 << 10);
 
     TEST_ASSERT_TRUE(put(list, "Store", strlen("Store"), "Permanent", strlen("Permanent")));
     TEST_ASSERT_TRUE(put(list, "Storage", strlen("Storage"), "Disk", strlen("Disk")));
@@ -76,7 +76,7 @@ static void puts_a_few_key_value_pairs_with_overlapping_keys() {
 }
 
 static void attempts_to_get_a_non_existent_key() {
-    struct list *list = new_list(2 << 10);
+    struct sorted_list *list = new_list(2 << 10);
 
     struct slice const retrieved_value = get_value(list, "NonExistent", strlen("NonExistent"));
 
@@ -86,7 +86,7 @@ static void attempts_to_get_a_non_existent_key() {
 }
 
 static void puts_a_few_key_value_pairs() {
-    struct list *list = new_list(2 << 10);
+    struct sorted_list *list = new_list(2 << 10);
 
     for (int index = 1; index < 10; index++) {
         char key[32];
@@ -118,7 +118,7 @@ static void puts_a_few_key_value_pairs() {
 }
 
 static void puts_keys_in_reverse_order_and_gets_all_values() {
-    struct list *list = new_list(2 << 10);
+    struct sorted_list *list = new_list(2 << 10);
 
     for (int index = 9; index >= 1; index--) {
         char key[32];
