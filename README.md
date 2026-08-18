@@ -1,11 +1,11 @@
 # arena-memtable [![arena-memtable-ci](https://github.com/SarthakMakhija/arena-memtable/actions/workflows/build.yml/badge.svg)](https://github.com/SarthakMakhija/arena-memtable/actions/workflows/build.yml)
-A tiny arena-backed sorted memtable in C, exploring arena allocation, raw byte storage, concurrency, and storage-engine data structures.
+A tiny arena-backed sorted Memtable in C, exploring arena allocation, raw byte storage, concurrency, and storage-engine data structures.
 
 ## Goals of the Project
 - **Arena-based Memtable**: Build a custom memory-arena-backed Memtable on top of a sorted linked list for educational purposes.
 - **API Operations**: Support standard `put` (insert) and `get` (retrieve) operations.
 - **Thread Safety**: Make the memory arena and list operations thread-safe.
-- **Comprehensive Testing**: Maintain high reliability and verify correctness through comprehensive test coverage.
+- **Comprehensive Testing**: Verify correctness through comprehensive test coverage.
 
 ## Components
 
