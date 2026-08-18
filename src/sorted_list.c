@@ -27,7 +27,7 @@ struct sorted_list *new_list(int32_t const capacity) {
     return list;
 }
 
-bool put(struct sorted_list *list, const char *key, uint16_t const key_length, const char *value,
+bool list_put(struct sorted_list *list, const char *key, uint16_t const key_length, const char *value,
          uint32_t const value_length) {
     const struct node node = new_node(list->arena, key, key_length, value, value_length);
     if (!is_valid_node(node)) {
@@ -71,7 +71,7 @@ bool put(struct sorted_list *list, const char *key, uint16_t const key_length, c
     return true;
 }
 
-struct slice get_value(struct sorted_list const *list, char const *key, uint16_t const key_length) {
+struct slice list_get_value(struct sorted_list const *list, char const *key, uint16_t const key_length) {
     struct node current = list->head;
     while (!is_null_node(current)) {
         struct slice const node_key = key_of(current);
