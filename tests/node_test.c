@@ -24,6 +24,18 @@ static void creates_new_node() {
     destroy_arena(arena);
 }
 
+static void creates_new_node_without_next_node() {
+    struct arena *arena = new_arena(100);
+    const char *const key = "Storage";
+    const char *const value = "LSM";
+
+    struct node const node = new_node(arena, key, strlen(key), value, strlen(value));
+
+    TEST_ASSERT_FALSE(has_next_node(node));
+
+    destroy_arena(arena);
+}
+
 static void get_an_invalid_node() {
     struct arena *arena = new_arena(5);
     const char *const key = "Storage";
@@ -115,6 +127,7 @@ int main() {
     UNITY_BEGIN();
 
     RUN_TEST(creates_new_node);
+    RUN_TEST(creates_new_node_without_next_node);
     RUN_TEST(get_an_invalid_node);
     RUN_TEST(gets_a_valid_node);
     RUN_TEST(gets_a_key);
