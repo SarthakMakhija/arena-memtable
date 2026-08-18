@@ -2,12 +2,6 @@
 
 #include "arena_memtable/slice.h"
 
-#include <stdlib.h>
-#include <string.h>
-
-#include "../cmake-build-debug/_deps/unity-src/src/unity.h"
-
-
 void setUp() {
 }
 
