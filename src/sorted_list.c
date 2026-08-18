@@ -5,13 +5,33 @@
 #include "node_internal.h"
 #include "arena_memtable/node.h"
 
+/**
+ * @brief Representation of the sorted linked list.
+ */
 struct sorted_list {
-    struct arena *arena;
-    struct node head;
+    struct arena *arena; /**< Backing memory arena where nodes are stored. */
+    struct node head;    /**< Logical node handle representing the start of the list. */
 };
 
+/**
+ * @brief Compares two keys lexicographically.
+ *
+ * Helper function that compares key bytes.
+ *
+ * @param key Pointer to first key.
+ * @param first_length Length of first key.
+ * @param other_key Pointer to second key.
+ * @param other_length Length of second key.
+ * @return An integer less than, equal to, or greater than zero if key is found,
+ *         respectively, to be less than, to match, or be greater than other_key.
+ */
 static int compare_keys(const char *key, uint16_t first_length, const char *other_key, uint16_t other_length);
 
+/**
+ * @brief Creates a new sorted linked list.
+ *
+ * Initializes the underlying arena and sets the head node pointer to offset 0 (null node).
+ */
 struct sorted_list *new_list(int32_t const capacity) {
     struct arena *const arena = new_arena(capacity);
     if (arena == nullptr) {
@@ -27,6 +47,15 @@ struct sorted_list *new_list(int32_t const capacity) {
     return list;
 }
 
+/**
+ * @brief Inserts a key/value pair into the sorted list in lexicographical order.
+ *
+ * Performs sorted insertion of the new node by handling three insertion cases:
+ * - Case A: The list is empty. Set head to the new node.
+ * - Case B: The new key belongs before the current head. Insert before head and update head.
+ * - Case C: Traverse list to find the correct slot, inserting the node between two existing nodes
+ *           or appending at the end of the list.
+ */
 bool list_put(struct sorted_list *list, const char *key, uint16_t const key_length, const char *value,
          uint32_t const value_length) {
     const struct node node = new_node(list->arena, key, key_length, value, value_length);
@@ -71,6 +100,12 @@ bool list_put(struct sorted_list *list, const char *key, uint16_t const key_leng
     return true;
 }
 
+/**
+ * @brief Retrieves the value slice associated with a key.
+ *
+ * Iterates through the list, comparing keys lexicographically.
+ * Since the list is sorted, lookup stops early if a greater key is met.
+ */
 struct slice list_get_value(struct sorted_list const *list, char const *key, uint16_t const key_length) {
     struct node current = list->head;
     while (!is_null_node(current)) {
@@ -88,6 +123,12 @@ struct slice list_get_value(struct sorted_list const *list, char const *key, uin
     return new_invalid_slice();
 }
 
+/**
+ * @brief Destroys the list and frees its resources.
+ *
+ * Destroys the backing memory arena, which frees all node memory in one go,
+ * then frees the list wrapper.
+ */
 void destroy_list(struct sorted_list *list) {
     if (list == nullptr) {
         return;
@@ -96,6 +137,9 @@ void destroy_list(struct sorted_list *list) {
     free(list);
 }
 
+/**
+ * @brief Compares two keys lexicographically.
+ */
 static int compare_keys(
     const char *key,
     uint16_t const first_length,
