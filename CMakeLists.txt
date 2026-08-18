@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 4.1)
 project(arena_memtable C)
 
 set(CMAKE_C_STANDARD 23)
+set(CMAKE_C_EXTENSIONS OFF)
+set(CMAKE_C_STANDARD_REQUIRED ON)
 
 add_library(arena_memtable STATIC
         src/arena.c
