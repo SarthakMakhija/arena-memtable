@@ -117,6 +117,43 @@ static void puts_a_few_key_value_pairs() {
     destroy_list(list);
 }
 
+static void puts_keys_in_reverse_order_and_gets_all_values() {
+    struct list *list = new_list(2 << 10);
+
+    for (int index = 9; index >= 1; index--) {
+        char key[32];
+        char value[32];
+
+        snprintf(key, sizeof(key), "Key_%d", index);
+        snprintf(value, sizeof(value), "Value_%d", index);
+
+        TEST_ASSERT_TRUE(
+            put(list, key, strlen(key), value, strlen(value))
+        );
+    }
+
+    for (int index = 1; index <= 9; index++) {
+        char key[32];
+        snprintf(key, sizeof(key), "Key_%d", index);
+
+        char expected_value[32];
+        snprintf(expected_value, sizeof(expected_value), "Value_%d", index);
+
+        struct slice const retrieved_value =
+            get_value(list, key, strlen(key));
+
+        TEST_ASSERT_EQUAL(strlen(expected_value), retrieved_value.length);
+
+        TEST_ASSERT_EQUAL_UINT8_ARRAY(
+            expected_value,
+            retrieved_value.data,
+            retrieved_value.length
+        );
+    }
+
+    destroy_list(list);
+}
+
 int main() {
     UNITY_BEGIN();
 
@@ -126,6 +163,7 @@ int main() {
     RUN_TEST(puts_a_few_key_value_pairs_with_overlapping_keys);
     RUN_TEST(attempts_to_get_a_non_existent_key);
     RUN_TEST(puts_a_few_key_value_pairs);
+    RUN_TEST(puts_keys_in_reverse_order_and_gets_all_values);
 
     return UNITY_END();
 }
