@@ -10,7 +10,7 @@
 #define RESERVED_VALUE_SIZE                (sizeof(uint32_t))
 #define RESERVED_NEXT_OFFSET_SIZE          (sizeof(uint32_t))
 #define NODE_HEADER_SIZE                   (RESERVED_KEY_SIZE + RESERVED_VALUE_SIZE + RESERVED_NEXT_OFFSET_SIZE)
-#define NULL_NEXT_OFFSET                   0
+#define NULL_NODE_OFFSET                   0
 
 #define KEY_LENGTH_OFFSET(offset) \
     (offset)
@@ -72,11 +72,15 @@ bool is_valid_node(struct node const node) {
     return node.offset != ARENA_OFFSET_INVALID;
 }
 
+bool is_null_node(struct node const node) {
+    return node.offset == NULL_NODE_OFFSET;
+}
+
 bool has_next_node(struct node const node) {
     arena_offset next_offset;
     memcpy(&next_offset, node.arena->buffer + NEXT_OFFSET(node.offset), sizeof(next_offset));
 
-    return next_offset != NULL_NEXT_OFFSET;
+    return next_offset != NULL_NODE_OFFSET;
 }
 
 struct slice key_from(struct node const node) {
@@ -152,7 +156,7 @@ static struct node fill_node_with(struct arena *arena,
 
     set_key_length(arena, key_length, node);
     set_value_length(arena, value_length, node);
-    set_next_node_offset(arena, NULL_NEXT_OFFSET, node);
+    set_next_node_offset(arena, NULL_NODE_OFFSET, node);
     set_key(arena, key, key_length, node);
     set_value(arena, value, value_length, key_length, node);
 

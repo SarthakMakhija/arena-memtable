@@ -21,6 +21,8 @@ struct node new_node(
 
 bool is_valid_node(struct node node);
 
+bool is_null_node(struct node node);
+
 bool has_next_node(struct node node);
 
 struct slice key_from(struct node node);

@@ -12,6 +12,15 @@ void setUp() {
 void tearDown() {
 }
 
+static void is_a_null_node() {
+    struct node const node = {
+        .arena = nullptr,
+        .offset = 0,
+    };
+
+    TEST_ASSERT_TRUE(is_null_node(node));
+}
+
 static void creates_new_node() {
     struct arena *arena = new_arena(100);
     const char *const key = "Storage";
@@ -126,6 +135,7 @@ static void gets_an_invalid_value_slice_from_an_invalid_node() {
 int main() {
     UNITY_BEGIN();
 
+    RUN_TEST(is_a_null_node);
     RUN_TEST(creates_new_node);
     RUN_TEST(creates_new_node_without_next_node);
     RUN_TEST(get_an_invalid_node);
