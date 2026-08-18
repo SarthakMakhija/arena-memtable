@@ -40,7 +40,7 @@ static void set_value(struct arena const *arena, char const *value, uint32_t val
 
 static struct node fill_node_with(struct arena *arena, char const *key, uint16_t key_length, char const *value,
                                   uint32_t value_length,
-                                  arena_offset next_offset);
+                                  arena_offset offset);
 
 struct node new_node(
     struct arena *arena,
@@ -73,7 +73,7 @@ bool is_valid_node(struct node const node) {
 }
 
 bool has_next_node(struct node const node) {
-    uint32_t next_offset;
+    arena_offset next_offset;
     memcpy(&next_offset, node.arena->buffer + NEXT_OFFSET(node.offset), sizeof(next_offset));
 
     return next_offset != NULL_NEXT_OFFSET;
@@ -144,10 +144,10 @@ static struct node fill_node_with(struct arena *arena,
                                   uint16_t const key_length,
                                   char const *value,
                                   uint32_t const value_length,
-                                  arena_offset const next_offset) {
+                                  arena_offset const offset) {
     struct node const node = {
         .arena = arena,
-        .offset = next_offset,
+        .offset = offset,
     };
 
     set_key_length(arena, key_length, node);
