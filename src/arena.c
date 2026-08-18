@@ -25,7 +25,7 @@ arena_offset allocate(struct arena *const arena, size_t const size) {
     if (size > arena->size - arena->next_offset) {
         return -1;
     }
-    const size_t next_offset = arena->next_offset;
+    size_t const next_offset = arena->next_offset;
     arena->next_offset = arena->next_offset + size;
 
     return (arena_offset) next_offset;
