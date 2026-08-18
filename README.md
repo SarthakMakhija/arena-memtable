@@ -10,7 +10,7 @@ A tiny arena-backed sorted Memtable in C, exploring arena allocation, raw byte s
 ## Components
 
 ### 1) Memtable
-The `memtable` (Memory Table) is the main write buffer wrapper. In LSM-tree storage engines, all incoming writes (`put`) are buffered in a memtable first before being flushed to disk. It exposes a clean `put`/`get` API and delegates the underlying storage and ordering to the sorted list.
+The `memtable` (Memory Table) is the main write buffer wrapper. In LSM-tree storage engines, all incoming writes (`put`) are buffered in a Memtable first before being flushed to disk. It exposes a clean `put`/`get` API and delegates the underlying storage and ordering to the sorted list.
 
 ### 2) Arena
 The `arena` is a contiguous block of pre-allocated memory (`unsigned char*`). Rather than allocating nodes dynamically on the system heap using expensive individual `malloc` calls, the arena bump-allocates space by advancing an offset. Instead of returning raw pointers, the allocator returns relative offsets (`arena_offset`), allowing node references to be represented independently of their absolute memory addresses.
@@ -30,7 +30,10 @@ Binary Layout of a Node at 'offset' in Arena:
 |<------------------- Fixed Header (10 Bytes) ------------------->|
 ```
 
-### 4) Interaction
+### 4) Sorted List
+The `sorted_list` maintains an ordered singly-linked list of logical nodes. It handles list traversal and performs sorted insertions in ascending lexicographical order based on key comparisons. It links nodes together by writing their relative offsets into each node's `Next Node Offset` field in the arena.
+
+### 5) Interaction
 - **Memtable** receives public lookup/insert requests and delegates them to the **Sorted List**.
 - **Sorted List** maintains the logic of a single-linked list (traversal, finding insertion points, and updating next links).
 - **Node** is a logical concept that wraps the arena and starting offset. It acts as the serialization layer to format key-value layouts directly inside the **Arena**.
