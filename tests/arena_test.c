@@ -15,7 +15,7 @@ static void creates_new_arena() {
 
     TEST_ASSERT_NOT_NULL(arena);
 
-    free(arena);
+    destroy_arena(arena);
 }
 
 static void first_allocation_returns_non_zero_offset() {
@@ -25,7 +25,7 @@ static void first_allocation_returns_non_zero_offset() {
 
     TEST_ASSERT_EQUAL_INT64(1, offset);
 
-    free(arena);
+    destroy_arena(arena);
 }
 
 static void multiple_allocations_return_unique_offsets() {
@@ -35,7 +35,7 @@ static void multiple_allocations_return_unique_offsets() {
     TEST_ASSERT_EQUAL_INT64(11, allocate(arena, 20));
     TEST_ASSERT_EQUAL_INT64(31, allocate(arena, 30));
 
-    free(arena);
+    destroy_arena(arena);
 }
 
 static void allocation_beyond_arena_capacity_returns_invalid_offset() {
@@ -43,7 +43,7 @@ static void allocation_beyond_arena_capacity_returns_invalid_offset() {
 
     TEST_ASSERT_EQUAL_INT64(ARENA_OFFSET_INVALID, allocate(arena, 11));
 
-    free(arena);
+    destroy_arena(arena);
 }
 
 int main() {

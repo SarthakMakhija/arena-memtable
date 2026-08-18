@@ -21,7 +21,7 @@ static void creates_new_node() {
 
     TEST_ASSERT_NOT_EQUAL(ARENA_OFFSET_INVALID, node.offset);
 
-    free(arena);
+    destroy_arena(arena);
 }
 
 static void get_an_invalid_node() {
@@ -33,7 +33,7 @@ static void get_an_invalid_node() {
 
     TEST_ASSERT_EQUAL(ARENA_OFFSET_INVALID, node.offset);
 
-    free(arena);
+    destroy_arena(arena);
 }
 
 static void gets_a_valid_node() {
@@ -44,7 +44,7 @@ static void gets_a_valid_node() {
     struct node const node = new_node(arena, key, strlen(key), value, strlen(value));
     TEST_ASSERT_TRUE(is_valid_node(node));
 
-    free(arena);
+    destroy_arena(arena);
 }
 
 static void gets_a_key() {
@@ -62,7 +62,7 @@ static void gets_a_key() {
         retrieved.length
     );
 
-    free(arena);
+    destroy_arena(arena);
 }
 
 static void gets_an_invalid_key_slice_from_an_invalid_node() {
@@ -76,7 +76,7 @@ static void gets_an_invalid_key_slice_from_an_invalid_node() {
 
     TEST_ASSERT_FALSE(is_valid_slice(retrieved));
 
-    free(arena);
+    destroy_arena(arena);
 }
 
 static void gets_a_value() {
@@ -94,7 +94,7 @@ static void gets_a_value() {
         retrieved.length
     );
 
-    free(arena);
+    destroy_arena(arena);
 }
 
 static void gets_an_invalid_value_slice_from_an_invalid_node() {
@@ -108,7 +108,7 @@ static void gets_an_invalid_value_slice_from_an_invalid_node() {
 
     TEST_ASSERT_FALSE(is_valid_slice(retrieved));
 
-    free(arena);
+    destroy_arena(arena);
 }
 
 int main() {

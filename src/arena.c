@@ -30,3 +30,11 @@ arena_offset allocate(struct arena *const arena, int32_t const size) {
 
     return (arena_offset) next_offset;
 }
+
+void destroy_arena(struct arena* arena) {
+    if (arena == nullptr) {
+        return;
+    }
+    free(arena->buffer);
+    free(arena);
+}
