@@ -1,9 +1,9 @@
-#include "arena_memtable/node.h"
-
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "arena_memtable/node.h"
+#include "node_internal.h"
 #include "arena_internal.h"
 
 #define RESERVED_KEY_SIZE                  (sizeof(uint16_t))
@@ -83,7 +83,7 @@ bool has_next_node(struct node const node) {
     return next_offset != NULL_NODE_OFFSET;
 }
 
-struct slice key_from(struct node const node) {
+struct slice key_of(struct node const node) {
     if (!is_valid_node(node)) {
         return new_invalid_slice();
     }
@@ -97,8 +97,8 @@ struct slice key_from(struct node const node) {
     };
 }
 
-struct slice value_from(struct node const node) {
-    struct slice const key = key_from(node);
+struct slice value_of(struct node const node) {
+    struct slice const key = key_of(node);
     if (!is_valid_slice(key)) {
         return key;
     }
@@ -110,6 +110,17 @@ struct slice value_from(struct node const node) {
         .data = (char const *) (node.arena->buffer + VALUE_OFFSET(node.offset, key.length)),
         .length = value_length
     };
+}
+
+arena_offset next_offset_of(struct node const node) {
+    arena_offset offset;
+    memcpy(&offset, node.arena->buffer + NEXT_OFFSET(node.offset), sizeof(offset));
+
+    return offset;
+}
+
+void set_next_node_of(struct node const node, struct node const next) {
+    set_next_node_offset(node.arena, next.offset, node);
 }
 
 static void set_key_length(struct arena const *arena, uint16_t const key_length, struct node const node) {

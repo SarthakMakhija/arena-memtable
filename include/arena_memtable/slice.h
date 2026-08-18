@@ -1,5 +1,6 @@
 #ifndef ARENA_MEMTABLE_SLICE_H
 #define ARENA_MEMTABLE_SLICE_H
+
 #include <stdint.h>
 
 struct slice {

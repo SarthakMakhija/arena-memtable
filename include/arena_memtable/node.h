@@ -25,8 +25,10 @@ bool is_null_node(struct node node);
 
 bool has_next_node(struct node node);
 
-struct slice key_from(struct node node);
+struct slice key_of(struct node node);
 
-struct slice value_from(struct node node);
+struct slice value_of(struct node node);
+
+arena_offset next_offset_of(struct node node);
 
 #endif //ARENA_MEMTABLE_NODE_H

@@ -6,6 +6,7 @@ set(CMAKE_C_STANDARD 23)
 add_library(arena_memtable STATIC
         src/arena.c
         src/arena_internal.h
+        src/node_internal.h
         src/node.c
         src/slice.c)
 

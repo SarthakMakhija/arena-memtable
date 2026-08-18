@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../src/node_internal.h"
+
 
 void setUp() {
 }
@@ -74,7 +76,7 @@ static void gets_a_key() {
     const char *const value = "LSM";
 
     struct node const node = new_node(arena, key, strlen(key), value, strlen(value));
-    struct slice const retrieved_key = key_from(node);
+    struct slice const retrieved_key = key_of(node);
 
     TEST_ASSERT_EQUAL(strlen(key), retrieved_key.length);
     TEST_ASSERT_EQUAL_UINT8_ARRAY(
@@ -93,7 +95,7 @@ static void gets_an_invalid_key_slice_from_an_invalid_node() {
         .arena = arena,
         .offset = ARENA_OFFSET_INVALID,
     };
-    struct slice const retrieved_key = key_from(node);
+    struct slice const retrieved_key = key_of(node);
 
     TEST_ASSERT_FALSE(is_valid_slice(retrieved_key));
 
@@ -106,7 +108,7 @@ static void gets_a_value() {
     const char *const value = "LSM";
 
     struct node const node = new_node(arena, key, strlen(key), value, strlen(value));
-    struct slice const retrieved_value = value_from(node);
+    struct slice const retrieved_value = value_of(node);
 
     TEST_ASSERT_EQUAL(3, retrieved_value.length);
     TEST_ASSERT_EQUAL_UINT8_ARRAY(
@@ -125,9 +127,40 @@ static void gets_an_invalid_value_slice_from_an_invalid_node() {
         .arena = arena,
         .offset = ARENA_OFFSET_INVALID,
     };
-    struct slice const retrieved_value = value_from(node);
+    struct slice const retrieved_value = value_of(node);
 
     TEST_ASSERT_FALSE(is_valid_slice(retrieved_value));
+
+    destroy_arena(arena);
+}
+
+static void gets_next_offset() {
+    struct arena *arena = new_arena(100);
+    const char *const key = "Storage";
+    const char *const value = "LSM";
+
+    struct node const node = new_node(arena, key, strlen(key), value, strlen(value));
+    arena_offset const next_offset = next_offset_of(node);
+
+    TEST_ASSERT_EQUAL(0, next_offset);
+
+    destroy_arena(arena);
+}
+
+static void sets_the_next_node() {
+    struct arena *arena = new_arena(100);
+
+    const char *const first_key = "one";
+    const char *const first_value = "one";
+    struct node const first = new_node(arena, first_key, strlen(first_key), first_value, strlen(first_value));
+
+    const char *const second_key = "one";
+    const char *const second_value = "one";
+    struct node const second = new_node(arena, second_key, strlen(second_key), second_value, strlen(second_value));
+
+    set_next_node_of(first, second);
+
+    TEST_ASSERT_EQUAL(second.offset, next_offset_of(first));
 
     destroy_arena(arena);
 }
@@ -144,6 +177,8 @@ int main() {
     RUN_TEST(gets_an_invalid_key_slice_from_an_invalid_node);
     RUN_TEST(gets_a_value);
     RUN_TEST(gets_an_invalid_value_slice_from_an_invalid_node);
+    RUN_TEST(gets_next_offset);
+    RUN_TEST(sets_the_next_node);
 
     return UNITY_END();
 }
