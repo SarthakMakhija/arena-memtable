@@ -16,7 +16,7 @@ The `memtable` (Memory Table) is the main write buffer wrapper. In LSM-tree stor
 The `arena` is a contiguous block of pre-allocated memory (`unsigned char*`). Rather than allocating nodes dynamically on the system heap using expensive individual `malloc` calls, the arena bump-allocates space by advancing an offset. Instead of returning raw pointers, the allocator returns relative offsets (`arena_offset`), allowing node references to be represented independently of their absolute memory addresses.
 
 ### 3) Node
-A `node` is a purely logical concept in the codebase. Each node wraps a reference to the arena and the starting offset where its key/value pair is serialized.
+A `node` is a purely logical concept in the codebase. Each node wraps a reference to the arena and the starting offset where its key-value pair is serialized.
 
 ```
 Binary Layout of a Node at 'offset' in Arena:
@@ -27,7 +27,7 @@ Binary Layout of a Node at 'offset' in Arena:
 | (uint16_t)  | (uint32_t)  | (arena_offset)    | (KeyLen bytes)  | (ValLen bytes)   |
 | [ 2 Bytes ] | [ 4 Bytes ] | [ 4 Bytes ]       |                 |                  |
 +-------------+-------------+-------------------+-----------------+------------------+
-|<------------------- Fixed Header (10 Bytes) ------------------->|
+* |<---------- Fixed Header (10 Bytes) -------->|
 ```
 
 ### 4) Sorted List
@@ -39,7 +39,6 @@ The `sorted_list` maintains an ordered singly-linked list of logical nodes. It h
 - **Node** is a logical concept that wraps the arena and starting offset. It acts as the serialization layer to format key-value layouts directly inside the **Arena**.
 - **Arena** handles space allocations within its contiguous backing buffer, returning relative offsets.
 
-
 ## Pending Items
 - [ ] **Thread-safe Arena**: Make next offset bump allocation atomic using atomic operations.
-- [ ] **Lock-free / Thread-safe Linked List Insertion**: Atomically update the next pointer (`next_offset`) while inserting key/value pairs in the sorted list.
+- [ ] **Lock-free / Thread-safe Linked List Insertion**: Atomically update the next pointer (`next_offset`) while inserting key-value pairs in the sorted list.
