@@ -57,15 +57,15 @@ struct node new_node(
     }
 
     int32_t const node_size = NODE_HEADER_SIZE + key_length + value_length;
-    arena_offset const next_offset = allocate(arena, node_size);
+    arena_offset const offset = allocate(arena, node_size);
 
-    if (next_offset == ARENA_OFFSET_INVALID) {
+    if (offset == ARENA_OFFSET_INVALID) {
         return (struct node){
             .arena = arena,
             .offset = ARENA_OFFSET_INVALID
         };
     }
-    return fill_node_with(arena, key, key_length, value, value_length, next_offset);
+    return fill_node_with(arena, key, key_length, value, value_length, offset);
 }
 
 bool is_valid_node(struct node const node) {
@@ -92,7 +92,7 @@ struct slice value_from(struct node const node) {
         return key;
     }
 
-    uint16_t value_length;
+    uint32_t value_length;
     memcpy(&value_length, node.arena->buffer + VALUE_LENGTH_OFFSET(node.offset), sizeof(value_length));
 
     return (struct slice){
