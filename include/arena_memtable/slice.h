@@ -2,6 +2,7 @@
 #define ARENA_MEMTABLE_SLICE_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 struct slice {
     char const* data;

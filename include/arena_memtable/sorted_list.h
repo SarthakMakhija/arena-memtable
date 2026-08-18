@@ -2,6 +2,7 @@
 #define ARENA_MEMTABLE_LIST_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "slice.h"
 

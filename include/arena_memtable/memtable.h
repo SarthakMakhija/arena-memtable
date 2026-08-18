@@ -1,5 +1,7 @@
 #ifndef ARENA_MEMTABLE_MEMTABLE_H
 #define ARENA_MEMTABLE_MEMTABLE_H
+
+#include <stdbool.h>
 #include <stdint.h>
 
 struct memtable;

@@ -3,6 +3,8 @@
 
 #define ARENA_OFFSET_INVALID (-1)
 
+#include <stdint.h>
+
 typedef int32_t arena_offset;
 
 struct arena;

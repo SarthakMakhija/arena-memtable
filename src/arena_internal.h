@@ -1,6 +1,8 @@
 #ifndef ARENA_MEMTABLE_ARENA_INTERNAL_H
 #define ARENA_MEMTABLE_ARENA_INTERNAL_H
 
+#include <stdint.h>
+
 struct arena {
     unsigned char* buffer;
     int32_t size;
