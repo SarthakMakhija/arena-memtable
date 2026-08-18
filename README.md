@@ -19,7 +19,7 @@ The `arena` is a contiguous block of pre-allocated memory (`unsigned char*`). Ra
 A `node` is a purely logical concept in the codebase. Each node wraps a reference to the arena and the starting offset where its key/value pair is serialized.
 
 ```
-Binary Layout of a Node at 'nodeOffset' in Arena:
+Binary Layout of a Node at 'offset' in Arena:
 
  0             2             6                   10               10 + KeyLen        Total Size
 +-------------+-------------+-------------------+-----------------+------------------+
