@@ -112,11 +112,11 @@ struct slice value_of(struct node const node) {
     };
 }
 
-arena_offset next_offset_of(struct node const node) {
-    arena_offset offset;
-    memcpy(&offset, node.arena->buffer + NEXT_OFFSET(node.offset), sizeof(offset));
+struct node next_node_of(struct node const node) {
+    arena_offset next_offset;
+    memcpy(&next_offset, node.arena->buffer + NEXT_OFFSET(node.offset), sizeof(next_offset));
 
-    return offset;
+    return (struct node){.arena = node.arena, .offset = next_offset};
 }
 
 void set_next_node_of(struct node const node, struct node const next) {

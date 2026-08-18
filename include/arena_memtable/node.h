@@ -29,6 +29,6 @@ struct slice key_of(struct node node);
 
 struct slice value_of(struct node node);
 
-arena_offset next_offset_of(struct node node);
+struct node next_node_of(struct node node);
 
 #endif //ARENA_MEMTABLE_NODE_H

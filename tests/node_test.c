@@ -134,15 +134,15 @@ static void gets_an_invalid_value_slice_from_an_invalid_node() {
     destroy_arena(arena);
 }
 
-static void gets_next_offset() {
+static void gets_next_node() {
     struct arena *arena = new_arena(100);
     const char *const key = "Storage";
     const char *const value = "LSM";
 
     struct node const node = new_node(arena, key, strlen(key), value, strlen(value));
-    arena_offset const next_offset = next_offset_of(node);
+    struct node const next_node = next_node_of(node);
 
-    TEST_ASSERT_EQUAL(0, next_offset);
+    TEST_ASSERT_EQUAL(0, next_node.offset);
 
     destroy_arena(arena);
 }
@@ -160,7 +160,10 @@ static void sets_the_next_node() {
 
     set_next_node_of(first, second);
 
-    TEST_ASSERT_EQUAL(second.offset, next_offset_of(first));
+    struct node const next_node = next_node_of(first);
+    TEST_ASSERT_EQUAL(second.offset, next_node.offset);
+    TEST_ASSERT_EQUAL_UINT8_ARRAY(second_key, key_of(second).data, key_of(second).length);
+    TEST_ASSERT_EQUAL_UINT8_ARRAY(second_value, value_of(second).data, value_of(second).length);
 
     destroy_arena(arena);
 }
@@ -177,7 +180,7 @@ int main() {
     RUN_TEST(gets_an_invalid_key_slice_from_an_invalid_node);
     RUN_TEST(gets_a_value);
     RUN_TEST(gets_an_invalid_value_slice_from_an_invalid_node);
-    RUN_TEST(gets_next_offset);
+    RUN_TEST(gets_next_node);
     RUN_TEST(sets_the_next_node);
 
     return UNITY_END();
