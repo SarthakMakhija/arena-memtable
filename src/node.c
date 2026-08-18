@@ -42,6 +42,19 @@ static struct node fill_node_with(struct arena *arena, char const *key, uint16_t
                                   uint32_t value_length,
                                   arena_offset offset);
 
+/**
+ * @brief Creates and serializes a new node into the arena.
+ *
+ * Checks for integer overflow, calculates the required node size, allocates memory
+ * from the arena, and fills the node's header and payloads.
+ *
+ * @param arena The arena to allocate from.
+ * @param key The key string payload.
+ * @param key_length The length of the key string.
+ * @param value The value byte payload.
+ * @param value_length The length of the value byte payload.
+ * @return A new node handle pointing to the allocated offset, or an invalid node on error.
+ */
 struct node new_node(
     struct arena *arena,
     char const *key,
@@ -68,14 +81,23 @@ struct node new_node(
     return fill_node_with(arena, key, key_length, value, value_length, offset);
 }
 
+/**
+ * @brief Checks if the node is valid.
+ */
 bool is_valid_node(struct node const node) {
     return node.offset != ARENA_OFFSET_INVALID;
 }
 
+/**
+ * @brief Checks if the node is a null node.
+ */
 bool is_null_node(struct node const node) {
     return node.offset == NULL_NODE_OFFSET;
 }
 
+/**
+ * @brief Checks if the node has a valid next node offset.
+ */
 bool has_next_node(struct node const node) {
     arena_offset next_offset;
     memcpy(&next_offset, node.arena->buffer + NEXT_OFFSET(node.offset), sizeof(next_offset));
@@ -83,6 +105,9 @@ bool has_next_node(struct node const node) {
     return next_offset != NULL_NODE_OFFSET;
 }
 
+/**
+ * @brief Retrieves a slice of the node's key from the arena.
+ */
 struct slice key_of(struct node const node) {
     if (!is_valid_node(node)) {
         return new_invalid_slice();
@@ -97,6 +122,9 @@ struct slice key_of(struct node const node) {
     };
 }
 
+/**
+ * @brief Retrieves a slice of the node's value from the arena.
+ */
 struct slice value_of(struct node const node) {
     struct slice const key = key_of(node);
     if (!is_valid_slice(key)) {
@@ -112,6 +140,9 @@ struct slice value_of(struct node const node) {
     };
 }
 
+/**
+ * @brief Returns the next node in the list.
+ */
 struct node next_node_of(struct node const node) {
     arena_offset next_offset;
     memcpy(&next_offset, node.arena->buffer + NEXT_OFFSET(node.offset), sizeof(next_offset));
@@ -119,26 +150,41 @@ struct node next_node_of(struct node const node) {
     return (struct node){.arena = node.arena, .offset = next_offset};
 }
 
+/**
+ * @brief Updates the next node offset link of a node.
+ */
 void set_next_node_of(struct node const node, struct node const next) {
     set_next_node_offset(node.arena, next.offset, node);
 }
 
+/**
+ * @brief Serializes the key length into the node header.
+ */
 static void set_key_length(struct arena const *arena, uint16_t const key_length, struct node const node) {
     memcpy(arena->buffer + KEY_LENGTH_OFFSET(node.offset), &key_length, sizeof(key_length));
 }
 
+/**
+ * @brief Serializes the value length into the node header.
+ */
 static void set_value_length(struct arena const *arena,
                              uint32_t const value_length,
                              struct node const node) {
     memcpy(arena->buffer + VALUE_LENGTH_OFFSET(node.offset), &value_length, sizeof(value_length));
 }
 
+/**
+ * @brief Serializes the next node offset into the node header.
+ */
 static void set_next_node_offset(struct arena const *arena,
                                  arena_offset const next_offset,
                                  struct node const node) {
     memcpy(arena->buffer + NEXT_OFFSET(node.offset), &next_offset, sizeof(next_offset));
 }
 
+/**
+ * @brief Serializes the key string into the node body.
+ */
 static void set_key(struct arena const *arena,
                     char const *key,
                     uint16_t const key_length,
@@ -146,6 +192,9 @@ static void set_key(struct arena const *arena,
     memcpy(arena->buffer + KEY_OFFSET(node.offset), key, key_length);
 }
 
+/**
+ * @brief Serializes the value payload into the node body.
+ */
 static void set_value(struct arena const *arena,
                       char const *value,
                       uint32_t const value_length,
@@ -154,6 +203,9 @@ static void set_value(struct arena const *arena,
     memcpy(arena->buffer + VALUE_OFFSET(node.offset, key_length), value, value_length);
 }
 
+/**
+ * @brief Populates the entire node header and payload in the arena.
+ */
 static struct node fill_node_with(struct arena *arena,
                                   char const *key,
                                   uint16_t const key_length,
