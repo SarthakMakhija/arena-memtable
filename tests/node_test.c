@@ -65,13 +65,13 @@ static void gets_a_key() {
     const char *const value = "LSM";
 
     struct node const node = new_node(arena, key, strlen(key), value, strlen(value));
-    struct slice const retrieved = key_from(node);
+    struct slice const retrieved_key = key_from(node);
 
-    TEST_ASSERT_EQUAL(7, retrieved.length);
+    TEST_ASSERT_EQUAL(strlen(key), retrieved_key.length);
     TEST_ASSERT_EQUAL_UINT8_ARRAY(
         key,
-        retrieved.data,
-        retrieved.length
+        retrieved_key.data,
+        retrieved_key.length
     );
 
     destroy_arena(arena);
@@ -84,9 +84,9 @@ static void gets_an_invalid_key_slice_from_an_invalid_node() {
         .arena = arena,
         .offset = ARENA_OFFSET_INVALID,
     };
-    struct slice const retrieved = key_from(node);
+    struct slice const retrieved_key = key_from(node);
 
-    TEST_ASSERT_FALSE(is_valid_slice(retrieved));
+    TEST_ASSERT_FALSE(is_valid_slice(retrieved_key));
 
     destroy_arena(arena);
 }
@@ -97,13 +97,13 @@ static void gets_a_value() {
     const char *const value = "LSM";
 
     struct node const node = new_node(arena, key, strlen(key), value, strlen(value));
-    struct slice const retrieved = value_from(node);
+    struct slice const retrieved_value = value_from(node);
 
-    TEST_ASSERT_EQUAL(3, retrieved.length);
+    TEST_ASSERT_EQUAL(3, retrieved_value.length);
     TEST_ASSERT_EQUAL_UINT8_ARRAY(
         value,
-        retrieved.data,
-        retrieved.length
+        retrieved_value.data,
+        retrieved_value.length
     );
 
     destroy_arena(arena);
@@ -116,9 +116,9 @@ static void gets_an_invalid_value_slice_from_an_invalid_node() {
         .arena = arena,
         .offset = ARENA_OFFSET_INVALID,
     };
-    struct slice const retrieved = value_from(node);
+    struct slice const retrieved_value = value_from(node);
 
-    TEST_ASSERT_FALSE(is_valid_slice(retrieved));
+    TEST_ASSERT_FALSE(is_valid_slice(retrieved_value));
 
     destroy_arena(arena);
 }
