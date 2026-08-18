@@ -3,9 +3,9 @@ A tiny arena-backed sorted memtable in C, exploring arena allocation, raw byte s
 
 ## Goals of the Project
 - **Arena-based Memtable**: Build a custom memory-arena-backed Memtable on top of a sorted linked list for educational purposes.
-- **API Operations**: Support standard `put` (insert/update) and `get` (retrieve) operations.
+- **API Operations**: Support standard `put` (insert) and `get` (retrieve) operations.
 - **Thread Safety**: Make the memory arena and list operations thread-safe.
-- **Exhaustive Testing**: Maintain high reliability and verify correctness through exhaustive test coverage.
+- **Comprehensive Testing**: Maintain high reliability and verify correctness through comprehensive test coverage.
 
 ## Components
 
@@ -13,10 +13,11 @@ A tiny arena-backed sorted memtable in C, exploring arena allocation, raw byte s
 The `memtable` (Memory Table) is the main write buffer wrapper. In LSM-tree storage engines, all incoming writes (`put`) are buffered in a memtable first before being flushed to disk. It exposes a clean `put`/`get` API and delegates the underlying storage and ordering to the sorted list.
 
 ### 2) Arena
-The `arena` is a contiguous block of pre-allocated memory (`unsigned char*`). Rather than allocating nodes dynamically on the system heap using expensive individual `malloc` calls, the arena bump-allocates space by advancing an offset. Instead of returning raw pointers, the allocator returns relative offsets (`arena_offset`), facilitating easy serialization and relocation.
+The `arena` is a contiguous block of pre-allocated memory (`unsigned char*`). Rather than allocating nodes dynamically on the system heap using expensive individual `malloc` calls, the arena bump-allocates space by advancing an offset. Instead of returning raw pointers, the allocator returns relative offsets (`arena_offset`), allowing node references to be represented independently of their absolute memory addresses.
 
 ### 3) Node
 A `node` is a purely logical concept in the codebase. Each node wraps a reference to the arena and the starting offset where its key/value pair is serialized.
+
 ```
 Binary Layout of a Node at 'nodeOffset' in Arena:
 

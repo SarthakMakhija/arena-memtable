@@ -139,6 +139,8 @@ void destroy_list(struct sorted_list *list) {
 
 /**
  * @brief Compares two keys lexicographically.
+*  @return An integer less than, equal to, or greater than zero if key is found,
+*  respectively, to be less than, to match, or be greater than other_key.
  */
 static int compare_keys(
     const char *key,
