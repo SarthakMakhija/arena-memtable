@@ -4,7 +4,7 @@
 
 #include "arena_internal.h"
 
-struct arena *new_arena(size_t const capacity) {
+struct arena *new_arena(int32_t const capacity) {
     unsigned char *buffer = malloc(capacity);
     if (!buffer) {
         return nullptr;
@@ -21,7 +21,7 @@ struct arena *new_arena(size_t const capacity) {
     return arena;
 }
 
-arena_offset allocate(struct arena *const arena, size_t const size) {
+arena_offset allocate(struct arena *const arena, int32_t const size) {
     if (size > arena->size - arena->next_offset) {
         return -1;
     }

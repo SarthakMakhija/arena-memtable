@@ -3,12 +3,12 @@
 
 #define ARENA_OFFSET_INVALID (-1)
 
-typedef int64_t arena_offset;
+typedef int32_t arena_offset;
 
 struct arena;
 
-struct arena* new_arena(size_t capacity);
+struct arena *new_arena(int32_t capacity);
 
-arena_offset allocate(struct arena* arena, size_t size);
+arena_offset allocate(struct arena *arena, int32_t size);
 
 #endif //ARENA_MEMTABLE_ARENA_H
