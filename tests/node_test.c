@@ -1,9 +1,9 @@
+#include <stdlib.h>
+#include <string.h>
+
 #include "unity.h"
 
 #include "arena_memtable/node.h"
-
-#include <stdlib.h>
-#include <string.h>
 
 #include "../src/node_internal.h"
 

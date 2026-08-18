@@ -8,7 +8,8 @@ add_library(arena_memtable STATIC
         src/arena_internal.h
         src/node_internal.h
         src/node.c
-        src/slice.c)
+        src/slice.c
+        src/list.c)
 
 target_include_directories(arena_memtable PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
@@ -30,6 +31,7 @@ enable_testing()
 add_executable(arena_tests tests/arena_test.c)
 add_executable(node_tests tests/node_test.c)
 add_executable(slice_tests tests/slice_test.c)
+add_executable(list_tests tests/list_test.c)
 
 target_link_libraries(arena_tests
         PRIVATE
@@ -46,6 +48,11 @@ target_link_libraries(slice_tests
         arena_memtable
         unity
 )
+target_link_libraries(list_tests
+        PRIVATE
+        arena_memtable
+        unity
+)
 
 add_test(
         NAME arena_tests
@@ -58,4 +65,8 @@ add_test(
 add_test(
         NAME slice_tests
         COMMAND slice_tests
+)
+add_test(
+        NAME list_tests
+        COMMAND list_tests
 )
