@@ -16,7 +16,6 @@ add_library(arena_memtable STATIC
 
 target_include_directories(arena_memtable PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-
 # ---- Tests ----
 
 include(FetchContent)

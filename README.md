@@ -1,5 +1,10 @@
 # arena-memtable [![arena-memtable-ci](https://github.com/SarthakMakhija/arena-memtable/actions/workflows/build.yml/badge.svg)](https://github.com/SarthakMakhija/arena-memtable/actions/workflows/build.yml)
-A tiny arena-backed sorted Memtable in C, exploring arena allocation, raw byte storage, concurrency, and storage-engine data structures.
+
+A lightweight, arena-backed sorted Memtable implementation in C designed for educational purposes. It explores bump-pointer arena allocation, 
+raw byte serialization, and lock-free/atomic concurrency concepts.
+
+This project is built as part of the hands-on course [Building a Transactional, LSM-Backed Storage Engine from First Principles](https://tech-lessons.in/trainings/lsm/) 
+and implements a sorted singly-linked list using relative offsets within a contiguous memory arena as its underlying Memtable structure.
 
 ## Goals of the Project
 - **Arena-based Memtable**: Build a custom memory-arena-backed Memtable on top of a sorted linked list for educational purposes.
@@ -27,7 +32,7 @@ Binary Layout of a Node at 'offset' in Arena:
 | (uint16_t)  | (uint32_t)  | (arena_offset)    | (KeyLen bytes)  | (ValLen bytes)   |
 | [ 2 Bytes ] | [ 4 Bytes ] | [ 4 Bytes ]       |                 |                  |
 +-------------+-------------+-------------------+-----------------+------------------+
-* |<---------- Fixed Header (10 Bytes) -------->|
+|<---------- Fixed Header (10 Bytes) ---------->|
 ```
 
 ### 4) Sorted List
