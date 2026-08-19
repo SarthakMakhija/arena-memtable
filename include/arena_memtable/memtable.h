@@ -43,7 +43,7 @@ struct memtable *new_memtable(int32_t capacity);
  * @param value_length Length of the value in bytes.
  * @return true on success, false if the memtable is nullptr or the arena is full.
  */
-bool put(struct memtable const *memtable, const char *key, uint16_t key_length, const char *value, uint32_t value_length);
+bool put(struct memtable const *memtable, const char key[static 1], uint16_t key_length, const char value[static 1], uint32_t value_length);
 
 /**
  * @brief Looks up a key in the memtable.
@@ -55,7 +55,7 @@ bool put(struct memtable const *memtable, const char *key, uint16_t key_length, 
  * @param key_length Length of the key in bytes.
  * @return A slice pointing to the associated value in the arena, or an invalid slice if not found.
  */
-struct slice get_value(struct memtable const *memtable, char const *key, uint16_t key_length);
+struct slice get_value(struct memtable const *memtable, char const key[static 1], uint16_t key_length);
 
 /**
  * @brief Destroys the memtable and releases all allocated memory.

@@ -47,7 +47,7 @@ struct sorted_list *new_list(int32_t capacity);
  * @param value_length Length of the value in bytes.
  * @return true on success, false if the node cannot be allocated or list is invalid.
  */
-bool list_put(struct sorted_list *list, const char *key, uint16_t key_length, const char *value, uint32_t value_length);
+bool list_put(struct sorted_list *list, const char key[static 1], uint16_t key_length, const char value[static 1], uint32_t value_length);
 
 /**
  * @brief Retrieves the value associated with a key from the sorted list.
@@ -61,7 +61,7 @@ bool list_put(struct sorted_list *list, const char *key, uint16_t key_length, co
  * @param key_length Length of the key in bytes.
  * @return A slice pointing to the value payload in the arena if found, or an invalid slice if not found.
  */
-struct slice list_get_value(struct sorted_list const *list, char const *key, uint16_t key_length);
+struct slice list_get_value(struct sorted_list const *list, char const key[static 1], uint16_t key_length);
 
 /**
  * @brief Destroys the sorted list and its backing arena.
