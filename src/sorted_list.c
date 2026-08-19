@@ -48,7 +48,7 @@ struct sorted_list *new_list(int32_t const capacity) {
 }
 
 /**
- * @brief Inserts a key/value pair into the sorted list in lexicographical order.
+ * @brief Inserts a key/value pair into the sorted list in lexicographical order. (No explicit handling of duplicate keys)
  *
  * Performs sorted insertion of the new node by handling three insertion cases:
  * - Case A: The list is empty. Set head to the new node.
@@ -151,14 +151,11 @@ static int compare_keys(
     uint16_t const length = first_length < other_length ? first_length : other_length;
     int const result = memcmp(key, other_key, length);
 
-    if (result != 0) {
+    if (result != 0)
         return result;
-    }
-    if (first_length < other_length) {
+    if (first_length < other_length)
         return -1;
-    }
-    if (first_length > other_length) {
+    if (first_length > other_length)
         return 1;
-    }
     return 0;
 }
